@@ -5,6 +5,9 @@ This project segmenting the customers to estimate potential income.
 
 ## 👩‍💻Business Problem
 A gaming company wants to create level-based personas using some characteristics of its customers, create segments based on these new customer personas, and estimate how much new customers can provide to the company on average. 
+
+The exploratory data analysis can be found in research folder [EDA](research\00_eda.ipynb)
+
 ## ⚡ Install
 
 Clone the repo and install the requirements.txt:
