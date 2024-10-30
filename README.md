@@ -25,7 +25,7 @@ Clone the repo and install the requirements.txt:
     9. Update the app.py
 
 ## 🎞 Screenshot
-  customer_segmenter.png
+  ![customer_segmenter](https://github.com/user-attachments/assets/d2136d61-c744-4707-83c4-2ebaf5a5330d)
   
 ## 📘 Lisans
 
