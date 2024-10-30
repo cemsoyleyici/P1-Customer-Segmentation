@@ -1,0 +1,23 @@
+artifacts_root: artifacts # create artifacts folder
+
+# Data Ingestion Configuration
+data_ingestion:
+  root_dir: artifacts/data_ingestion
+  local_data_file: artifacts/data_ingestion/persona_raw.csv
+
+# Data Validation Configuration
+data_validation:
+  root_dir: artifacts/data_validation
+  STATUS_FILE: artifacts/data_validation/status.txt  
+
+# Data Transformation Configuration
+data_transformation:
+  root_dir: artifacts/data_transformation
+
+# Model Generation Configuration
+model_generation:
+  root_dir: artifacts/model_generation
+
+# Prediction Configuration
+prediction:
+  root_dir: artifacts/model_generation

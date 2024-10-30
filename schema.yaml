@@ -1,0 +1,11 @@
+
+
+COLUMNS:
+    PRICE: float64
+    SOURCE: object
+    SEX: object
+    COUNTRY: object
+    AGE: int
+
+TARGET_COLUMN:
+  name: PRICE

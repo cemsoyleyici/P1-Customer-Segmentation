@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer Segmenter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            display: block;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            max-width: 400px;
+            margin: 20px auto;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);
+        }
+        /* Chrome, Safari, Edge için number input ok stillerini özelleştirme */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        /* Firefox için number input stillerini özelleştirme */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    .button-container {
+        width: 100%;
+        max-width: 400px;
+        margin: 20px auto;
+        display: flex;
+        gap: 10px;
+    }
+    
+    .generate-btn {
+        background-color: #2196F3;
+        flex: 1;
+    }
+    
+    .predict-btn {
+        background-color: #4CAF50;
+        flex: 1;
+    }
+    
+    .loading {
+        display: none;
+        text-align: center;
+        margin: 10px 0;
+    }
+    
+    .status-message {
+        text-align: center;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 4px;
+    }
+    
+    .status-success {
+        background-color: #dff0d8;
+        color: #3c763d;
+    }
+    
+    .status-error {
+        background-color: #f2dede;
+        color: #a94442;
+    }
+
+    .button-container {
+        width: 100%;
+        max-width: 400px;
+        margin: 20px auto;
+        display: flex;
+        gap: 10px;
+    }
+    
+    .generate-btn {
+        background-color: #2196F3;
+        flex: 1;
+    }
+    
+    .predict-btn {
+        background-color: #4CAF50;
+        flex: 1;
+    }
+    
+    .loading {
+        display: none;
+        text-align: center;
+        margin: 10px 0;
+    }
+    
+    .status-message {
+        text-align: center;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 4px;
+    }
+    
+    .status-success {
+        background-color: #dff0d8;
+        color: #3c763d;
+    }
+    
+    .status-error {
+        background-color: #f2dede;
+        color: #a94442;
+    }
+</style>
+</head>
+<body>
+    <h1>Customer Segmenter</h1>
+    
+    <form method="POST">
+        <div class="form-group">
+            <label for="country"><b>Country:<b></label>
+            <select id="country" name="country" required>
+                <option value="USA">United States of America</option>
+                <option value="BRA">Brasil</option>
+                <option value="TUR">Turkiye</option>
+                <option value="DEU">Germany</option>
+                <option value="FRA">France</option>
+                <option value="CAN">Canada</option>
+            </select>    
+        </div>
+        
+        <div class="form-group">
+            <label for="os">Operating System:</label>
+            <select id="os" name="os" required>
+                <option value="ANDROID">Android</option>
+                <option value="IOS">iOS</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="sex">Sex:</label>
+            <select id="sex" name="sex" required>
+                <option value="MALE">Male</option>
+                <option value="FEMALE">Female</option>
+            </select>
+        </div>
+        
+        
+        <div class="form-group">
+            <label for="age">Age:</label>
+            <input list="age-list" id="age" name="age" required 
+                   class="custom-select" 
+                   type="number" 
+                   min="0" 
+                   max="100" 
+                   placeholder="Select or type age">
+            <datalist id="age-list">
+                {% for i in range(101) %}
+                    <option value="{{ i }}">
+                {% endfor %}
+            </datalist>
+        </div>
+        
+    </form>
+    <div class="button-container">
+        <button type="submit" class="predict-btn">Predict</button>
+        <button type="button" onclick="generateModel()" class="generate-btn">Generate Model</button>
+    </div>
+    
+    <div id="loading" class="loading">
+        Generating model... Please wait...
+    </div>
+    
+    <div id="model-result" class="result" style="display: none;"></div>
+    
+    <script>
+        async function generateModel() {
+            const loadingDiv = document.getElementById('loading');
+            const resultDiv = document.getElementById('model-result');
+            const generateBtn = document.querySelector('.generate-btn');
+            
+            try {
+                // Button and loading state update
+                generateBtn.disabled = true;
+                loadingDiv.style.display = 'block';
+                resultDiv.style.display = 'none';
+                
+                const response = await fetch('/generate_model', {
+                    method: 'POST',
+                });
+                
+                const result = await response.json();
+                
+                // Show result
+                resultDiv.innerHTML = `
+                    <div class="status-message ${result.status === 'success' ? 'status-success' : 'status-error'}">
+                        ${result.result}
+                    </div>
+                `;
+                resultDiv.style.display = 'block';
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="status-message status-error">
+                        Error: ${error.message}
+                    </div>
+                `;
+                resultDiv.style.display = 'block';
+            } finally {
+
+                loadingDiv.style.display = 'none';
+                generateBtn.disabled = false;
+            }
+        }
+    </script>
+
+    {% if prediction %}
+        <div class="result">
+            {% if prediction.error %}
+                <p style="color: red;">Error: {{ prediction.error }}</p>
+            {% else %}
+                <h2>Prediction Results:</h2>
+                <p>Average Income   : {{ prediction.income }} $</p>
+                <p>Customer Segment : {{ prediction.segment }}</p>
+            {% endif %}
+        </div>
+    {% endif %}
+</body>
+</html>
